@@ -1,0 +1,56 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+$popularTags = $block->getPopularTags();
+
+//echo "<pre>"; print_r($popularTags); exit;
+
+?>
+
+<div class="block block-faq">
+        <div class="block-title">
+		<strong><?php echo __('Popular Tags'); ?></strong>
+	</div> 
+ 
+	
+	    <div class="menu faq-tags">
+                <ul class="tags">
+                <?php foreach($popularTags as $tag): ?>
+                    <li>
+                        <a class="faq-tag faq-link" onclick="searchFaqTags('<?php echo __($tag) ?>');" title="<?php echo __($tag) ?>"><?php echo __($tag) ?></a>
+                    </li>
+                <?php endforeach; ?>
+                
+	    </div>
+	    
+
+</div>
+
+
+
+<script>
+   
+    function searchFaqTags(tag) {
+            
+            var form = document.createElement('form');
+            var elem = document.createElement('input');
+            
+            form.method = "GET";
+            form.action = "<?php echo $block->getSearchUrl() ?>";
+            
+            elem.name   = "faqssearch";
+            elem.value   = tag;
+            
+            form.appendChild(elem);
+            
+            document.body.appendChild(form);
+
+            form.submit();
+        
+    }
+    
+</script>

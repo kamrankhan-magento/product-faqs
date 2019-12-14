@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+    	<referenceContainer name="page.main.actions">
+            <block class="FME\Prodfaqs\Block\Adminhtml\Dropdown\Switcher" name="store_switcher" template="FME_Prodfaqs::gridswitcher/switcher.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <uiComponent name="prodfaqs_topic_listing"/>
+        </referenceContainer>
+    </body>
+</page>

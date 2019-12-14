@@ -1,0 +1,123 @@
+
+
+
+
+
+
+<?php
+
+$block->redirectIfNotLoggedIn();
+//echo "test";
+//echo "<pre>";
+$loginid = $block->getLoginId();
+	//print_r($block->getCustomerQuestions($loginid)->getData());exit;
+$customercollection = $block->getCustomerQuestions($loginid);
+
+$customeranswers = $block->getCustomerAnswers($loginid);
+ 
+ 
+ //print_r($faq);exit;
+?>
+
+<h4>Your Questions</h4>
+
+<div class="table-wrapper">
+    <table class="data-table table" id="aw-pq-customer-questions-table">
+        <col width="150" />
+        <col />
+        <col width="1" />
+        <col width="130" />
+        <thead>
+        <tr>
+            <th><span class="nobr">Product</span></th>
+            <th><span class="nobr">Question</span></th>
+            <th><span class="nobr">Answers</span></th>
+            <th><span class="nobr">Status</span></th>
+            <th><span class="nobr">Is Answered?</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php 
+        		foreach ($customercollection as $collection)
+        		 {
+        			
+        		$faq_answers = $block->getAnswersCount($collection['faq_id']);
+				//echo count($faq_answers);exit;
+                $proname='';
+                $prourl='';
+                $proname = $block->getproname($collection['pro_id']);
+                $prourl = $block->getprourl($collection['pro_id']);
+        ?>
+                    <tr>
+                <td>
+                    <a target="_Blank" href="<?php echo $prourl?>" title="<?php echo $proname?>">
+                        <?php echo $proname?>                   </a>
+                </td>
+                
+
+                    <td >
+                    <?php echo $collection['title']; ?>                </td>
+                    <td title="<?php echo $collection['title']; ?>">
+                    <?php echo count($faq_answers); ?>                </td>
+
+                <td><?php if($collection['status']==0){echo "Pending";}else{echo "Published";} ?></td>
+                <td><span class="nobr"><?php if(count($faq_answers)==0){ echo "Not yet";} else { echo "Yes"; }?></span></td>
+            </tr>
+                    
+                 <?php } ?> 
+                  
+                    
+                    
+                    
+                </tbody>
+    </table>
+</div>
+
+<br />
+<h4>Your Answers</h4>
+<div class="table-wrapper">
+    <table class="data-table table" id="aw-pq-customer-answers-table">
+        <col width="150" />
+        <col width="220" />
+        <col width="220"/>
+        <col width="50" />
+        <thead>
+        <tr>
+            <th><span class="nobr">Product</span></th>
+            <th><span class="nobr">Question</span></th>
+            <th><span class="nobr">Answer</span></th>
+            <th><span class="nobr">Status</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php 
+        foreach ($customeranswers as $collection)
+                 {
+                    $faq = $block->getFaq($collection['faq_id']);
+
+                    $proname='';
+                $prourl='';
+                $proname = $block->getproname($faq[0]['pro_id']);
+                $prourl = $block->getprourl($faq[0]['pro_id']);
+                    ?>
+                    <tr>
+                <td>
+                    <a target="_Blank" href="<?php echo $prourl?>" title="<?php echo $proname?>">
+                         <?php echo $proname?>                     </a>
+
+                </td>
+                <td title="<?php echo $faq[0]['title']?> ">
+                    <?php echo $faq[0]['title']?>               </td>
+                <td title="<?php echo $collection['answer']?> ">
+                    <?php echo $collection['answer']?>                </td>
+                <td><?php if($collection['status']==0){echo "Pending";}else{echo "Published";} ?></td>
+            </tr>
+                   
+                  <?php  } ?>  
+                  
+                    
+                   
+                   
+                </tbody>
+    </table>
+</div>

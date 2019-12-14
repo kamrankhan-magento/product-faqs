@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="FME_Prodfaqs::css/style.css" />
+     <!--  <script src="https://www.google.com/recaptcha/api.js" src_type="url" />   --> 
+
+
+    </head>
+    <body>
+        <referenceContainer name="sidebar.additional" >
+            <block class="FME\Prodfaqs\Block\Faqs" name="faqBlock" template="FME_Prodfaqs::block.phtml" ifconfig="prodfaqs/general/faq_block" />
+            <block class="FME\Prodfaqs\Block\Faqs" name="searchBlock" template="FME_Prodfaqs::search_block.phtml" ifconfig="prodfaqs/general/faq_search_block"/>
+            <block class="FME\Prodfaqs\Block\Faqs" name="tagsBlock" template="FME_Prodfaqs::tags_block.phtml" ifconfig="prodfaqs/general/tags_block" />
+        </referenceContainer>
+        <referenceBlock name="footer_links">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" ifconfig="prodfaqs/list/enabled" name="faqs-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">FAQs</argument>
+                    <argument name="path" xsi:type="string">prodfaqs</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

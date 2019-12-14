@@ -1,0 +1,71 @@
+<?php
+/**
+ * Copyright © 2016 @FME EXTENSIONS. All rights reserved.
+ * See COPYING.txt for license details.
+ Author : Ashar riaz
+ */
+
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magento\Backend\Block\Store\Switcher */
+?>
+
+
+<div class="store-switcher store-view">
+    <span class="store-switcher-label"><?php /* @escapeNotVerified */ echo __('View:') ?></span>
+    <div class="actions dropdown closable">
+        
+        <button
+            type="select"
+            class="admin__action-dropdown"
+            data-mage-init='{"dropdown":{}}'
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            id="store-change-button">
+            <?php /* @escapeNotVerified */ echo $block->getselectedpage() ?>
+        </button>
+        <ul class="dropdown-menu" data-role="stores-list">
+            <?php if($block->getselectedpage() == 'FAQ') { } else{?>
+                <li class="store-switcher-all">
+                    
+                        <a data-role="store-view-id" data-value="" href="<?php echo $block->getfaqsurl(); ?>">
+                            FAQ's
+                        </a>
+                    
+                </li>
+                <?php } ?>
+                <?php if($block->getselectedpage() == 'Topics') { } else{?>
+                <li class="store-switcher-all">
+                    
+                        <a data-role="store-view-id" data-value="" href="<?php echo $block->gettopicurl(); ?>">
+                            Topics
+                        </a>
+                    
+                </li>
+                 <?php } ?>
+                 <?php if($block->getselectedpage() == 'By Product') { } else{?>
+                 <li class="store-switcher-all">
+                    
+                        <a data-role="store-view-id" data-value="" href="<?php echo $block->getbyproductsurl(); ?>">
+                            By Product
+                        </a>
+                    <?php } ?>
+                </li>
+                
+                <!-- <li class="store-switcher-all">
+                    
+                        <a data-role="store-view-id" data-value="" href="<?php echo $block->getconfigurl(); ?>">
+                            Settings
+                        </a>
+                   
+                </li> -->
+            
+        </ul>
+    </div>
+    <?php if($block->getselectedpage() == 'Topics') { } else{?>
+   <a href="<?php echo $block->getfilterurl(); ?>">Reset Filter</a>
+   <?php }?>
+</div>
+
+
+

@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+$topicsCollection = $block->getFrontPageTopics();
+
+?>
+
+<div class="block block-faq">
+        <div class="block-title">
+		<strong><?php echo __('FAQs'); ?></strong>
+	</div> 
+ 
+	<?php if ( $topicsCollection->count() == 0 ) : ?>  
+	    <div class="block-content">
+		<p class="empty"><?php echo __('No Faqs find yet!') ?></p>
+	    </div>
+	<?php else : ?>
+	    <div class="menu">
+		<p><?php echo __('Click on the Faq\'s topic:') ?></p>
+		<ul>
+		 <?php 
+                        $count = 1;
+                        foreach ($topicsCollection as $_topic):
+                            
+                            if($count <= $block->getFaqsBlockNumberOfTopics()){
+                     ?>
+			<li><a href="<?php echo $block->getTopicUrl($_topic->getId()); ?>"><?php echo $_topic->getTitle(); ?></a></li>		    
+                            <?php } $count++; endforeach; ?>
+		 <li><a href="<?php echo $this->getMainPageUrl() ?>"><?php echo __('View all topics') ?></a></li>
+	       </ul>         
+	    </div>
+	    
+	<?php endif; ?>   
+
+</div>

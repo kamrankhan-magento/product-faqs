@@ -1,0 +1,532 @@
+<?php 
+	$data = $this->getSort_type();
+	$type = $data[0];
+	$proid = $data[1];
+	$arrow = $data[2];
+	$faqsColection = $block->getProductPageAjaxFaqs($proid,$type,$arrow);
+	$answerLengthAllowed = $block->allowedAnswerLength();
+	$count = 1;
+?>
+<ul id="<?php echo 'accordion_element' ?>">
+                    
+                    <?php 
+
+                        if($faqsColection->count() > 0){
+
+                            foreach ($faqsColection as $faq){
+
+                            $faqanswers = $block->getfaqanswers($faq->getId());                               
+                                
+                    ?>                            
+                    <li>
+                                <div class="accordion-toggle" ><?php echo $faq->getTitle(); ?>
+                                    
+                                    <?php if($block->isRatingEnable() ){ ?>
+                                        <div class="br-theme-css-stars" style="float: right;">
+                                            <select id="<?php echo $faq->getId(); ?>" data-stars-role="<?php echo (int) $faq->getRatingStars(); ?>" data-customer-rate-readonly="<?php echo $block->isCustomerReadonlyStars($faq->getId())?>">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                        </div>
+                                        
+
+                                    <?php } ?>
+                                </div>
+
+                                <div class="accordion-content " >
+                                <div class="answered_by">Question by: <?php echo $faq->getQuestion_by(); ?> on <?php echo $faq->getCreate_date(); ?></div>
+
+                                <?php
+                                    foreach ($faqanswers as $ans) {
+                                   
+                                 ?>
+                                    <div class="add_thread1">
+                                    <p>
+                                        <?php 
+                                            $answer = $ans['answer']; 
+                                            if($answerLengthAllowed == 0 || (strlen($answer) <= $answerLengthAllowed)):
+                                                echo $answer;
+                                            else:
+                                                echo substr($answer, 0, $answerLengthAllowed).' <a title="'._("View Detail").'" href="'.$block->getFaqUrl($faq).'">...</a>';
+                                            endif;  
+                                        ?>
+                                    </p>
+                                    
+                                
+                                    
+                                    <div  class="answered_by">Answer by: <?php echo $ans['answer_by']; ?> on <?php echo $ans['create_date']; ?></div>
+                                    <?php if($block->isLikesEnable() ) { ?>
+                                    <div style="<?php if(!$block->isLikesAllowed() || $block->isCustomerReadonlyLikes($ans['answer_id'])){ echo 'pointer-events: none'; }?>" class="js-rating" data-ans="<?php echo $ans['answer_id']; ?>" data-like="<?php echo $ans['likes']; ?>" data-dislike="<?php echo $ans['dislikes']; ?>"></div>
+                                    <?php } ?>
+                                    </div>
+
+                                   <?php } ?>
+                                      <!-- Answer form -->
+
+     <?php if($block->isAskAnswerEnable() && $block->isAskAnswerAllowed()): ?>
+        
+    <div class="ask-answer-form mfp-hide white-popup-block " id="fme-ask-answer-form-wraper<?php echo $faq->getId(); ?>" style=""  >
+    
+            <form action="javascript:void(0);" id="fme-ask-answer-form<?php echo $faq->getId(); ?>" name="fme-ask-answer-form<?php echo $faq->getId(); ?>" onsubmit="return myFunction2(<?php echo $faq->getId(); ?>)" method="post" enctype="multipart/form-data" class="review-form">
+            
+            
+            <input name="status" id="status" value="0" type="hidden"  />
+            <input name="faq_id" id="faq_id" value="<?php echo $faq->getID(); ?>" type="hidden"  />
+            <input type="hidden" name="faqs[]" value="<?php echo $faq->getID(); ?>">
+             <input type="hidden" name="count<?php echo $faq->getId(); ?>" id="count<?php echo $faq->getId(); ?>" value="<?php echo $count; ?>">
+             <input name="faq_question" id="faq_question" value="this is question ?" type="hidden"  />
+            <input name="product_url" id="product_url" value="<?php echo $block->getProductUrl(); ?>" type="hidden"  />
+                        
+            <div class="fieldset">
+                <h2 class="legend"><?php echo __('Add answer') ?></h2>
+                
+                <div id="faq-response2<?php echo  $faq->getID(); ?>" class=""></div>  
+                        
+                        <div class="field required">
+                            <label for="customer_name" class="label"><?php echo __('Name') ?></label>
+                            <div class="control customer_name">
+                                <input name="customer_name" id="customer_name" title="<?php echo __('Customer Name ') ?>" value="<?php if($block->getLoginId()){echo $block->getLoginName();} ?>" class="input-text" data-validate="{required:true}" type="text" />
+                            </div>
+                        </div>
+                        
+                        <div class="field required">
+                            <label for="customer_email"  class="label"><?php echo __('Email') ?></label>
+                            <div class="control">
+                            <input name="customer_email" id="customer_email" title="<?php echo __('Customer Email') ?>" value="<?php if($block->getLoginId()){echo $block->getLoginEmail();}?>" class="input-text" data-validate="{required:true, 'validate-email':true}" type="text" />
+                            </div>
+                        </div>
+                                                        
+                                                <div class="field required">
+                                                    <label for="answer" class="label"><?php echo __('Answer') ?></label>
+                                                    <div class="control">
+                                                        <textarea name="answer" id="answer" title="<?php echo __('Answer') ?>" class="input-text" cols="5" rows="3" data-validate="{required:true}"></textarea>
+                                                    </div>
+                                                </div>
+                                                
+                                                <?php if($block->isCaptchaEnable()): 
+                                                    
+                                                ?>
+                                                
+                                                 <div  name="recaptcha2" id="recaptcha2<?php echo $faq->getId(); ?>"></div> 
+                                                 <br><br><br>
+                                                <?php endif; ?>
+                                
+                                
+                            
+                                <button  type="submit" onclick="" id="<?php echo  $faq->getID(); ?>" value="<?php echo  $count; ?>" title="<?php echo __('Submit') ?>" class="button"><span><?php echo __('Submit') ?></span></button>
+                                <span style="padding-left: 30px;" id="progress-loader2<?php echo  $faq->getID(); ?>"></span>  
+                            <input type="hidden" name="custid" value="<?php echo $block->getLoginId(); ?>">
+                            <?php $count++; ?>
+            
+            </div>
+            <div class="clear"></div>
+            
+        </form>
+        
+            <script>
+
+                require([
+                    'jquery',
+                    'mage/mage'
+                ], function($){
+
+                    var dataForm = $('#fme-ask-answer-form');
+                    var ignore = null;
+
+                    dataForm.mage('validation', {
+                            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+                        }).find('input:text').attr('autocomplete', 'off');
+
+                });
+            </script>
+            
+    </div>
+    
+    <?php if($block->openFormPopupSlide() == 'slide'): ?>
+            <p class="faqsaddslide add_answer" >
+                    <a class="btn-slide popup-with-form" title="<?php echo __('Add answer') ?>" id="fme-faq-btn-popup-open" href="#fme-ask-answer-form-wraper<?php echo $faq->getId(); ?>" ><?php echo __('Add answer'); ?></a>
+            </p>
+        <?php else: ?>
+            <p class="faqsaddslide add_answer" >
+                    <a class="btn-slide popup-with-form" title="<?php echo __('Add answer') ?>" id="fme-faq-btn-popup-open" href="#fme-ask-answer-form-wraper<?php echo $faq->getId(); ?>" ><?php echo __('Add answer'); ?></a>
+            </p>
+        <?php endif; ?>
+
+    <?php endif; ?>
+                                </div>
+
+               
+ 
+                    </li>
+                    <?php
+                                                                
+                            }                        
+
+                        }else{
+                    ?>
+                    
+                            <div class="message notice">
+                                <div>
+                                    <?php echo __('There are no faqs for this topic.');  ?>
+                                </div>
+                            </div>
+                            
+                    <?php
+                            
+                        }
+
+                    ?>
+                </ul>
+
+
+
+
+
+                <?php if($block->isAccordionEnable() ){ ?>
+
+    <script>
+        require([
+            'jquery',
+            'tabs'], function ($) {
+            $(".faq_block ul").accordion();
+
+            $("ul").each(function(n) {
+              
+           // $(this).find("#ui-accordion-accordion_element-panel-"+n).height('auto');
+            $("#ui-accordion-accordion_element-panel-"+n).css("height", 'auto');
+      });
+        });    
+
+    </script>
+
+<?php } ?>
+
+
+<?php if($block->isRatingEnable() ){ ?>
+
+    <script>
+
+        require([
+            'jquery',
+            'barrating'
+            ], function ($) {
+
+            $('.br-theme-css-stars select').barrating({
+                theme : 'css-stars',
+                initialRating : true, //get value from element's attribute 'data-stars-role'
+               // readonly : <?php //echo $block->isCustomerRatingReadonly() ?>,
+                onSelect : function(value, text, faq, event){
+
+                    if(typeof(event) !== undefined){
+
+                        $('#rating-response').text('');
+
+                        //call ajax and save the rating for that FAQ
+                        $.ajax({
+                                method: "POST",
+                                dataType: "json",
+                                url: "<?php echo $block->getRatingAjaxUrl() ?>",
+                                data: { value: value, faq: faq }
+                        }).done(function( res ) {
+
+                                if(res.error === false){
+
+                                    $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-fail')){
+                                        $('#rating-response').removeClass('rate-fail');
+                                    }
+                                    $('#rating-response').addClass('rate-success');
+
+                                    //make these stars readonly now
+                                    $('#'+faq).barrating('readonly', true);
+
+                                }else{
+                                    $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-success')){
+                                        $('#rating-response').removeClass('rate-success');
+                                    }
+                                    $('#rating-response').addClass('rate-fail');                                
+                                }
+
+
+
+                        });
+                    }
+                }
+            });
+        });
+
+    </script>
+
+
+    <script type="text/x-magento-init">
+        {
+            "[data-rating-role=rating-placeholder]": {
+                "FME_Prodfaqs/js/barrating":
+                    {}
+            }
+        }
+    </script>
+
+
+<!-- ----------------------------------------------------------------------------    -->
+
+ <script>
+
+        require([
+            'jquery',
+            'FME_Prodfaqs/js/jquery.thumbs'
+            ], function ($) {
+
+            $('.js-rating-simple').thumbs();
+               $('.js-rating').thumbs({
+             onLike: function (value,value2,faq) {
+               
+              
+                
+                $.ajax({
+                                method: "POST",
+                                dataType: "json",
+                                url: "<?php echo $block->getLikesAjaxUrl() ?>",
+                                data: { value: value, value2: value2 ,faq: faq}
+                        }).done(function( res ) {
+                                if(res.error === false){
+
+                                    $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-fail')){
+                                        $('#rating-response').removeClass('rate-fail');
+                                    }
+                                    $('#rating-response').addClass('rate-success');
+                                                                 
+                                }
+                                else{
+                                     $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-success')){
+                                        $('#rating-response').removeClass('rate-success');
+                                    }
+                                    $('#rating-response').addClass('rate-fail');
+                                }
+
+                                  
+
+                        });
+             },
+             onDislike: function(value,value2,faq) {
+                
+
+                        $.ajax({
+                                method: "POST",
+                                dataType: "json",
+                                url: "<?php echo $block->getLikesAjaxUrl() ?>",
+                                data: { value: value2, value2: value ,faq: faq}
+                        }).done(function( res ) {
+                                if(res.error === false){
+
+                                    $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-fail')){
+                                        $('#rating-response').removeClass('rate-fail');
+                                    }
+                                    $('#rating-response').addClass('rate-success');
+                                                                 
+                                }
+                                else{
+                                     $('#rating-response').text(res.message);
+                                    if($('#rating-response').hasClass('rate-success')){
+                                        $('#rating-response').removeClass('rate-success');
+                                    }
+                                    $('#rating-response').addClass('rate-fail');
+                                }
+
+                                  
+
+                        });
+             }
+            });
+        });
+
+    </script>
+
+
+
+
+<?php } ?>
+
+
+<?php if($block->isAskAnswerEnable() && $block->isAskAnswerAllowed()){ ?>
+
+    <script type="text/x-magento-init">
+        {        
+            "[data-role=popup]": {
+                "FME_Prodfaqs/js/mobile":
+                    {}
+            }
+        }
+    </script>
+
+    <script>
+
+        require([
+            'jquery',
+            'mobile'], function ($) {
+
+                $('.popup-with-form').magnificPopup({
+                      type: 'inline',
+                      preloader: false,
+                      focus: '#name',
+
+                      // When elemened is focused, some mobile browsers in some cases zoom in
+                      // It looks not nice, so we disable it:
+                      callbacks: {
+                        beforeOpen: function() {
+                          if($(window).width() < 700) {
+                            this.st.focus = false;
+                          } else {
+                            this.st.focus = '#name';
+                          }
+                        }
+                      }
+                });
+
+        });
+
+
+
+
+    
+
+ function myFunction2(val) {
+        
+        var myForm = document.getElementById("fme-ask-answer-form"+val);
+
+
+        //var count = document.getElementById("count"+val).value;
+        var exists = myForm.elements[9].value;
+        
+        //document.getElementById("g-recaptcha-response-"+count);
+    // var name =  document.getElementById('recaptcha2'+val).querySelectorAll('[id^="g-recaptcha-response"]');
+    // alert(val);
+     //   alert(name.value);
+        
+        
+            if(exists == null){
+                    
+            }
+        
+             else{
+                 document.getElementById("recaptcha2"+val).style.display ="inline-block";
+            var check = exists;//document.getElementById("g-recaptcha-response-"+count).value;
+           // alert(check);
+                if(check=='' || check == null){
+                    document.getElementById("recaptcha2"+val).style.border = "1px solid #ea0e0e";
+                    
+                }
+                else{
+                    document.getElementById("recaptcha2"+val).style.border = "none";
+                     
+                    
+                }
+
+
+
+                
+    //Extract Each Element Value
+    
+                if(myForm.elements[6].value == '' || myForm.elements[5].value == null){
+                    
+                    document.getElementById("customer_name").style.border = "1px solid #ea0e0e";
+                    
+                }
+                else{
+                   
+                     document.getElementById("customer_name").style.border = "1px solid #c2c2c2";
+                     
+                    
+                }
+
+                if(myForm.elements[7].value == '' || !validateForm(myForm.elements[7].value)){
+                    
+                    document.getElementById("customer_email").style.border = "1px solid #ea0e0e";
+                    
+                }
+                else{
+                    
+                     document.getElementById("customer_email").style.border = "1px solid #c2c2c2";
+                     
+                }
+
+                if(myForm.elements[8].value == '' || myForm.elements[8].value == null){
+                   
+                    document.getElementById("answer").style.border = "1px solid #ea0e0e";
+                    
+                }
+                else{
+                     
+                     document.getElementById("answer").style.border = "1px solid #c2c2c2";
+                    
+                }
+
+
+
+                if(check=='' || myForm.elements[6].value == '' || myForm.elements[7].value == '' || myForm.elements[8].value == '' || !validateForm(myForm.elements[7].value)){
+
+
+                    return false;
+                }
+                else{
+                    return true;
+                }
+
+               
+              
+              
+            }
+
+
+    
+   
+
+
+
+            
+            return false;
+}
+
+  function validateForm(email) {
+    var x = email;
+    var atpos = x.indexOf("@");
+    var dotpos = x.lastIndexOf(".");
+    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
+
+    </script>
+
+    
+<?php } ?>
+ 
+
+<style type="text/css">
+    
+    #recaptcha {
+  display: inline-block;
+  position: relative;
+     
+  
+}
+
+ #recaptcha2 {
+ display: inline-block;
+  position: relative; 
+  
+  
+}
+
+</style>

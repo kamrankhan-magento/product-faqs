@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="prodfaqs_email_template" label="Product Faqs" file="prodfaqs.html" type="html" module="FME_Prodfaqs" area="frontend"/>
+
+    <template id="prodfaqs_email_replytemplate" label="Reply Template" file="reply_form.html" type="html" module="FME_Prodfaqs" area="frontend"/>
+
+    <template id="prodfaqs_email_answertemplate" label="Answer Template" file="prodfaq_answer.html" type="html" module="FME_Prodfaqs" area="frontend"/>
+
+</config>

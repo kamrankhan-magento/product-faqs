@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!--di for topic-->
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="prodfaqs_topic_listing_data_source" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Topic\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="FME\Prodfaqs\Model\ResourceModel\Topic\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fme_faqs_topic</argument>
+            <argument name="eventPrefix" xsi:type="string">faqs_topic_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">faqs_topic_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Topic</argument>
+        </arguments>
+    </type>
+    
+    <virtualType name="FaqsTopicGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+    <virtualType name="FaqsTopicGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">FME\Prodfaqs\Model\ResourceModel\Topic\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">FaqsTopicGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+
+
+
+    <!--di for faqs -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="prodfaqs_products_listing_data_source" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Products\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>
+
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="prodfaqs_faqs_listing_data_source" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Faqs\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="FME\Prodfaqs\Model\ResourceModel\Faqs\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fme_faq</argument>
+            <argument name="eventPrefix" xsi:type="string">faqs_faqs_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">faqs_faqs_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Faqs</argument>
+        </arguments>
+    </type>
+    
+    <virtualType name="FaqsFaqsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+ <virtualType name="FaqsProductsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="FME\Prodfaqs\Model\ResourceModel\Products\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fme_faqs_product</argument>
+            <argument name="eventPrefix" xsi:type="string">faqs_products_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">faqs_products_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Products</argument>
+        </arguments>
+    </type>
+
+
+    <type name="FME\Prodfaqs\Controller\Adminhtml\Topic\Image\Upload">
+    <arguments>
+        <argument name="imageUploader" xsi:type="object">FME\Prodfaqs\ProdfaqsImageUpload</argument>
+    </arguments>
+    </type>
+
+
+    <virtualType name="FME\Prodfaqs\ProdfaqsImageUpload" type="FME\Prodfaqs\Model\ImageUploader">
+    <arguments>
+        <argument name="baseTmpPath" xsi:type="string">faqs</argument>
+        <argument name="basePath" xsi:type="string">faqs</argument>
+        <argument name="allowedExtensions" xsi:type="array">
+            <item name="jpg" xsi:type="string">jpg</item>
+            <item name="jpeg" xsi:type="string">jpeg</item>
+            <item name="gif" xsi:type="string">gif</item>
+            <item name="png" xsi:type="string">png</item>
+        </argument>
+    </arguments>
+</virtualType>  
+
+    <!--di for faqs -->
+    
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="faqs_faqs_listing_data_source" xsi:type="string">FME\Prodfaqs\Model\ResourceModel\Prodfaqs\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>
+
+
+
+    <virtualType name="FaqsFaqsGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">FME\Prodfaqs\Model\ResourceModel\Faqs\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">FaqsFaqsGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+
+
+    <virtualType name="FaqsProductsGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">FME\Prodfaqs\Model\ResourceModel\Products\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">FaqsProductsGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+    
+    
+</config>

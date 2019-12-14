@@ -1,0 +1,177 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+$topicsData = $block->getCurrentTopicDetail();
+$answerLengthAllowed = $block->allowedAnswerLength();
+
+?>
+    
+    
+
+            <div class="faq_block" data-rating-role="rating-placeholder">
+                    
+                <div id="rating-response"></div>
+                
+                <h2><?php echo $topicsData->getTitle(); ?></h2>
+                
+                <?php
+                    
+                    if($topicsData->getImage()): ?>
+                        
+                        <div class="banner">
+                            <img alt="" src="<?php echo $block->getMediaDirectoryUrl().$topicsData->getImage()?>">
+                        </div>
+                
+                <?php
+                
+                    endif;
+                
+                ?>                
+                
+                <ul id="<?php echo 'accordion_element' ?>">
+                    
+                    <?php $faqsColection = $block->getDetailPageFaqs($topicsData->getId());
+
+                        if($faqsColection->count() > 0){
+
+                            foreach ($faqsColection as $faq){                               
+                                
+                    ?>                            
+                    <li>
+                                <div class="accordion-toggle" data-role="trigger"><?php echo $faq->getTitle(); ?></div>
+                                <div class="accordion-content" data-role="content">
+                                    <p>
+                                        <?php 
+                                            $answer = $faq->getFaqAnswer(); 
+                                            if($answerLengthAllowed == 0 || (strlen($answer) <= $answerLengthAllowed)):
+                                                echo $answer;
+                                            else:
+                                                echo substr($answer, 0, $answerLengthAllowed).' <a title="'._("View Detail").'" href="'.$block->getFaqUrl($faq).'">...</a>';
+                                            endif;  
+                                        ?>
+                                    </p>
+                                    
+                                
+                                    <?php if($block->isRatingEnable() ){ ?>
+                                        <div class="br-theme-css-stars">
+                                            <select id="<?php echo $faq->getId(); ?>" data-stars-role="<?php echo (int) $faq->getRatingStars(); ?>" data-customer-rate-readonly="<?php echo $block->isCustomerReadonlyStars($faq->getId())?>">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                
+                                
+                    </li>
+                    <?php
+                                                                
+                            }                        
+
+                        }else{
+                    ?>
+                    
+                            <div class="message notice">
+                                <div>
+                                    <?php echo __('There are no faqs for this topic.');  ?>
+                                </div>
+                            </div>
+                            
+                    <?php
+                            
+                        }
+
+                    ?>
+                </ul>      
+                
+                
+            </div>
+              
+    
+
+<?php if($block->isAccordionEnable() ){ ?>
+
+<script>
+    require([
+        'jquery',
+        'tabs'], function ($) {
+        $(".faq_block ul").accordion();
+    });    
+   
+</script>
+
+<?php } ?>
+
+
+<?php if($block->isRatingEnable() ){ ?>
+
+<script>
+   
+    require([
+        'jquery',
+        'barrating'
+        ], function ($) {
+        
+        $('.br-theme-css-stars select').barrating({
+            theme : 'css-stars',
+            initialRating : true, //get value from element's attribute 'data-stars-role'
+           // readonly : <?php //echo $block->isCustomerRatingReadonly() ?>,
+            onSelect : function(value, text, faq, event){
+                
+                if(typeof(event) !== undefined){
+                    
+                    $('#rating-response').text('');
+                    
+                    //call ajax and save the rating for that FAQ
+                    $.ajax({
+                            method: "POST",
+                            dataType: "json",
+                            url: "<?php echo $block->getRatingAjaxUrl() ?>",
+                            data: { value: value, faq: faq }
+                    }).done(function( res ) {
+                            
+                            if(res.error === false){
+                                
+                                $('#rating-response').text(res.message);
+                                if($('#rating-response').hasClass('rate-fail')){
+                                    $('#rating-response').removeClass('rate-fail');
+                                }
+                                $('#rating-response').addClass('rate-success');
+                                
+                                //make these stars readonly now
+                                $('#'+faq).barrating('readonly', true);
+                                
+                            }else{
+                                $('#rating-response').text(res.message);
+                                if($('#rating-response').hasClass('rate-success')){
+                                    $('#rating-response').removeClass('rate-success');
+                                }
+                                $('#rating-response').addClass('rate-fail');                                
+                            }
+                            
+                    });
+                }
+            }
+        });
+    });
+    
+</script>
+
+
+<script type="text/x-magento-init">
+    {
+        "[data-rating-role=rating-placeholder]": {
+            "FME_Prodfaqs/js/barrating":
+                {}
+	}
+    }
+</script>
+
+<?php } ?>

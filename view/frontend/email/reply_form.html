@@ -1,0 +1,36 @@
+
+
+<!--@subject {{var data.storename}}{{trans " FAQ Response"}} @-->
+{{template config_path="design/email/header_template"}}
+
+<table>
+    New Answer has been added by {{var data.storename}}
+    <tr class="email-summary">
+        <td>
+            <h1>FAQ Answer</h1>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>            
+            <table class="message-info"> 
+            <tr>
+                                   <td align="center" style="text-align:left;width:33%;font-weight:bold;">Question:</td>
+                                   <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.question}}</td>
+                </tr>               
+                <tr>
+                                   <td align="center" style="text-align:left;width:33%;font-weight:bold;">Answer :</td>
+                                   <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.answer}}</td>
+                </tr>
+                
+                <tr>
+                                   <td align="center" style="text-align:left;width:33%;font-weight:bold;">Regards,</td>
+                                   <td align="center" style="padding-left:5px;text-align:left;width:70%;">&nbsp; </td>
+                </tr>
+            </table>            
+            
+            
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

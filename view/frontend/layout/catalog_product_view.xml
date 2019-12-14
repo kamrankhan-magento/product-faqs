@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="review_product_form_component"/>
+    <head>
+        <css src="FME_Prodfaqs::css/css-stars.css" />
+        <css src="FME_Prodfaqs::css/popup.css" />
+       <css src="FME_Prodfaqs::css/jquery.thumbs.css" />
+        
+    </head>
+    <body>
+
+        <referenceBlock name="product.info.details">
+            <block class="FME\Prodfaqs\Block\Product\Faqs" after="pattachments.tab" name="faqs.tab" as="faqs" template="FME_Prodfaqs::product_faqs_block.phtml" group="detailed_info" ifconfig="prodfaqs/product_questions/enable" />                
+        </referenceBlock>
+    </body>
+</page>
